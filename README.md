@@ -11,6 +11,7 @@ Secure NPC looting and player robbery for **RSG Framework (RedM)**, with ox_lib 
 - Random reward on every body: **common** or **rare** item plus a small amount of cash.
 - Configurable rare chance, item pools and cash ranges.
 - Optional lawman alert (via `rsg-lawman`) when a body is looted.
+- Increases the player's outlaw status on successful loot / robbery (configurable).
 
 ### Player Robbery
 - Rob a nearby player who is **dead**, **handcuffed** or has their **hands up**.
@@ -89,6 +90,8 @@ Secure NPC looting and player robbery for **RSG Framework (RedM)**, with ox_lib 
 | `Config.RobCooldown` | `60` | Seconds before the same victim can be robbed again |
 | `Config.TakeCash` | `true` | Take the victim's cash |
 | `Config.TakeBloodMoney` | `true` | Take the victim's blood money |
+| `Config.OutlawLoot` | `10` | Outlaw status added per successful loot (`0` = off) |
+| `Config.OutlawRob` | `50` | Outlaw status added per successful robbery (`0` = off) |
 
 ### `server/sv_webhooks_config.lua`
 

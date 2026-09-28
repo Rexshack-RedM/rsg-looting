@@ -15,6 +15,13 @@ local function reject(src, event, reason)
     return false
 end
 
+-- raise the player's outlaw status (0 = disabled)
+local function addOutlaw(Player, amount)
+    if not amount or amount <= 0 then return end
+    local current = Player.PlayerData.metadata.outlawstatus or 0
+    Player.Functions.SetMetaData('outlawstatus', current + amount)
+end
+
 local function distanceBetween(a, b)
     return #(GetEntityCoords(a) - GetEntityCoords(b))
 end
@@ -65,6 +72,7 @@ lib.callback.register('rsg-looting:server:lootReward', function(src, netId)
 
     local cashAmount = math.random(cash[1], cash[2])
     Player.Functions.AddMoney('cash', cashAmount, 'rsg-looting')
+    addOutlaw(Player, Config.OutlawLoot)
     Webhooks.Loot(src, given, given and 1 or 0, cashAmount, rare)
     return true
 end)
@@ -125,6 +133,7 @@ RegisterNetEvent('rsg-looting:server:robPlayer', function(targetId)
     robCooldown[targetId] = os.time()
     local cash = Config.TakeCash and takeMoney(Player, Target, 'cash', 'cash_robbed_victim', 'cash_robbed_robber') or 0
     local blood = Config.TakeBloodMoney and takeMoney(Player, Target, 'bloodmoney', 'bloodmoney_robbed_victim', 'bloodmoney_robbed_robber') or 0
+    addOutlaw(Player, Config.OutlawRob)
     Webhooks.Rob(src, targetId, reason, cash, blood)
 
     exports['rsg-inventory']:OpenInventoryById(src, targetId)

@@ -19,3 +19,7 @@ Config.RobDistance  = 2.5
 Config.RobCooldown  = 60          -- seconds before the same victim can be robbed again
 Config.TakeCash       = true
 Config.TakeBloodMoney = true
+
+-- outlaw status added on success (0 = disabled)
+Config.OutlawLoot = 10
+Config.OutlawRob  = 50
