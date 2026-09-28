@@ -44,6 +44,7 @@ Secure NPC looting and player robbery for **RSG Framework (RedM)**, with ox_lib 
 - [rsg-inventory](https://github.com/Rexshack-RedM/rsg-inventory)
 - [rsg-lawman](https://github.com/Rexshack-RedM/rsg-lawman)
 - [ox_lib](https://github.com/overextended/ox_lib)
+- [oxmysql](https://github.com/overextended/oxmysql)
 - OneSync enabled (used for server-side entity checks)
 
 ---
@@ -54,6 +55,7 @@ Secure NPC looting and player robbery for **RSG Framework (RedM)**, with ox_lib 
 2. Make sure all dependencies are started **before** this resource.
 3. Add to your `server.cfg`:
    ```cfg
+   ensure oxmysql
    ensure ox_lib
    ensure rsg-core
    ensure rsg-inventory
@@ -90,8 +92,8 @@ Secure NPC looting and player robbery for **RSG Framework (RedM)**, with ox_lib 
 | `Config.RobCooldown` | `60` | Seconds before the same victim can be robbed again |
 | `Config.TakeCash` | `true` | Take the victim's cash |
 | `Config.TakeBloodMoney` | `true` | Take the victim's blood money |
-| `Config.OutlawLoot` | `10` | Outlaw status added per successful loot (`0` = off) |
-| `Config.OutlawRob` | `50` | Outlaw status added per successful robbery (`0` = off) |
+| `Config.OutlawLoot` | `10` | `players.outlawstatus` added per successful loot (`0` = off) |
+| `Config.OutlawRob` | `50` | `players.outlawstatus` added per successful robbery (`0` = off) |
 
 ### `server/sv_webhooks_config.lua`
 

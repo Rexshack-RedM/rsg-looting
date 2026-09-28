@@ -15,11 +15,11 @@ local function reject(src, event, reason)
     return false
 end
 
--- raise the player's outlaw status (0 = disabled)
+-- raise the player's outlaw status in the players table (0 = disabled)
 local function addOutlaw(Player, amount)
     if not amount or amount <= 0 then return end
-    local current = Player.PlayerData.metadata.outlawstatus or 0
-    Player.Functions.SetMetaData('outlawstatus', current + amount)
+    MySQL.update('UPDATE players SET outlawstatus = outlawstatus + ? WHERE citizenid = ?',
+        { amount, Player.PlayerData.citizenid })
 end
 
 local function distanceBetween(a, b)

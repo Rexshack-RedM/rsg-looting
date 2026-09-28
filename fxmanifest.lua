@@ -4,7 +4,7 @@ game 'rdr3'
 lua54 'yes'
 
 description 'rsg-looting'
-version '2.0.0'
+version '2.0.1'
 
 shared_scripts {
   '@ox_lib/init.lua',
@@ -14,6 +14,7 @@ shared_scripts {
 client_script 'client/client.lua'
 
 server_scripts {
+  '@oxmysql/lib/MySQL.lua',
   'server/sv_webhooks_config.lua',
   'server/sv_webhooks.lua',
   'server/server.lua',
@@ -27,6 +28,7 @@ dependencies {
     'rsg-inventory',
     'rsg-lawman',
     'ox_lib',
+    'oxmysql',
 }
 
 ox_lib 'locale'
