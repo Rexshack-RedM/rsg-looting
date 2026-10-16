@@ -6,7 +6,7 @@ local HANDSUP_DICT = 'script_proc@robberies@homestead@lonnies_shack@deception'
 local HANDSUP_ANIM = 'hands_up_loop'
 
 ---------------------------------------------------------------------
--- NPC looting (ox_target)
+-- NPC looting (native prompt or ox_target, see Config.LootMethod)
 ---------------------------------------------------------------------
 local looting = false
 
@@ -36,20 +36,62 @@ local function lootBody(target)
     looting = false
 end
 
-exports.ox_target:addGlobalPed({
-    name = 'rsg-looting:loot',
-    icon = 'fa-solid fa-hand',
-    label = locale('loot_prompt'),
-    distance = Config.LootDistance,
-    canInteract = function(entity) return canLoot(entity) end,
-    onSelect = function(data) lootBody(data.entity) end,
-})
+if Config.LootMethod == 'native' then
+    -----------------------------------------------------------------
+    -- native RDR2 loot prompt: reward once the game marks the body looted
+    -----------------------------------------------------------------
+    local INPUT_LOOT = 0x41AC83D1
 
-AddEventHandler('onResourceStop', function(res)
-    if res == GetCurrentResourceName() then
-        exports.ox_target:removeGlobalPed('rsg-looting:loot')
+    local function isNativeLooted(ped)
+        return Citizen.InvokeNative(0x8DE41E9902E85756, ped) -- _IS_ENTITY_FULLY_LOOTED
     end
-end)
+
+    local function waitForNativeLoot(target)
+        looting = true
+        local timeout = GetGameTimer() + 8000 -- native loot anim is ~2-4s
+        while GetGameTimer() < timeout and DoesEntityExist(target) do
+            if isNativeLooted(target) then
+                local ok = lib.callback.await('rsg-looting:server:lootReward', false, NetworkGetNetworkIdFromEntity(target))
+                if ok and Config.LawAlert then
+                    TriggerServerEvent('rsg-lawman:server:lawmanAlert', locale('law_alert'))
+                end
+                break
+            end
+            Wait(100)
+        end
+        looting = false
+    end
+
+    CreateThread(function()
+        while true do
+            Wait(0)
+            if not looting and IsControlJustPressed(0, INPUT_LOOT) then
+                local ped = lib.getClosestPed(GetEntityCoords(cache.ped), Config.LootDistance)
+                if ped and canLoot(ped) and not isNativeLooted(ped) then
+                    CreateThread(function() waitForNativeLoot(ped) end)
+                end
+            end
+        end
+    end)
+else
+    -----------------------------------------------------------------
+    -- ox_target option + progress bar
+    -----------------------------------------------------------------
+    exports.ox_target:addGlobalPed({
+        name = 'rsg-looting:loot',
+        icon = 'fa-solid fa-hand',
+        label = locale('loot_prompt'),
+        distance = Config.LootDistance,
+        canInteract = function(entity) return canLoot(entity) end,
+        onSelect = function(data) lootBody(data.entity) end,
+    })
+
+    AddEventHandler('onResourceStop', function(res)
+        if res == GetCurrentResourceName() then
+            exports.ox_target:removeGlobalPed('rsg-looting:loot')
+        end
+    end)
+end
 
 ---------------------------------------------------------------------
 -- rob other player

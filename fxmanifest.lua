@@ -4,7 +4,7 @@ game 'rdr3'
 lua54 'yes'
 
 description 'rsg-looting'
-version '3.0.0'
+version '3.0.1'
 
 shared_scripts {
   '@ox_lib/init.lua',

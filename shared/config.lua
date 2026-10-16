@@ -8,7 +8,11 @@ Config.RareChance  = 5            -- % chance of rare loot
 Config.CommonCash  = { 1, 5 }     -- min / max cash with common loot
 Config.RareCash    = { 5, 10 }    -- min / max cash with rare loot
 
-Config.LootTime     = 3000        -- ms searching the body (progress bar)
+-- 'native' = use the game's own hold-to-loot prompt on bodies
+-- 'target' = ox_target option with a progress bar
+Config.LootMethod   = 'native'
+
+Config.LootTime     = 3000        -- ms searching the body (target mode only)
 Config.LootDistance = 3.0         -- max distance to the body (server checked)
 Config.LootCooldown = 3           -- seconds between loot rewards per player
 Config.LawAlert     = true        -- alert lawmen when a body is looted
