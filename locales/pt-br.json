@@ -38,5 +38,9 @@
     "wh_reason_not_dead": "o ped não está morto",
     "wh_reason_too_far_body": "muito longe do corpo",
     "wh_reason_too_far_target": "muito longe do alvo %s",
-    "wh_reason_rob_failed": "tentativa de roubo em %s falhou na validação"
+    "wh_reason_rob_failed": "tentativa de roubo em %s falhou na validação",
+    "rob_no_money": "They had no money on them",
+    "wh_reason_rob_skipped": "rob on %s skipped progress bar / no approval",
+    "loot_prompt": "Loot Body",
+    "loot_progress": "Searching body..."
 }

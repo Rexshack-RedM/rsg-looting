@@ -7,7 +7,8 @@ Secure NPC looting and player robbery for **RSG Framework (RedM)**, with ox_lib 
 ## Features
 
 ### NPC Looting
-- Loot dead NPCs using the native RDR2 loot prompt (hold the loot key).
+- Loot dead NPCs with **ox_target** (third-eye a body → *Loot Body*), with a search animation and progress bar.
+- Looted bodies are flagged server side (entity state bag) so the prompt disappears for everyone.
 - Random reward on every body: **common** or **rare** item plus a small amount of cash.
 - Configurable rare chance, item pools and cash ranges.
 - Optional lawman alert (via `rsg-lawman`) when a body is looted.
@@ -18,12 +19,15 @@ Secure NPC looting and player robbery for **RSG Framework (RedM)**, with ox_lib 
 - Takes the victim's cash and/or blood money (toggle each) and opens their inventory.
 - Progress bar with animation; can be cancelled.
 - Per-victim cooldown so the same player can't be robbed repeatedly.
+- Robber is told if the victim had no money on them.
 
 ### Security
 - All rewards are decided and given **server side**; the client never chooses items or amounts.
 - Server validates every loot: the entity exists, is an NPC, is dead, is within range and hasn't already been looted.
 - Per-player loot cooldown stops event spamming.
 - Robbery is checked by server-side distance, victim state and cooldown. The hands-up check asks the **victim's** client, so the robber can't fake it.
+- Robbery must be approved by the server first and the reward event is only accepted after the progress bar time has passed, so cheaters can't skip it or rob without approval.
+- The victim's hands-up check times out after 3 seconds, so an unresponsive client can't hang the robber.
 - Inventory space is checked before items are added.
 
 ### Discord Webhooks
@@ -44,6 +48,7 @@ Secure NPC looting and player robbery for **RSG Framework (RedM)**, with ox_lib 
 - [rsg-inventory](https://github.com/Rexshack-RedM/rsg-inventory)
 - [rsg-lawman](https://github.com/Rexshack-RedM/rsg-lawman)
 - [ox_lib](https://github.com/overextended/ox_lib)
+- [ox_target](https://github.com/overextended/ox_target)
 - [oxmysql](https://github.com/overextended/oxmysql)
 - OneSync enabled (used for server-side entity checks)
 
@@ -57,6 +62,7 @@ Secure NPC looting and player robbery for **RSG Framework (RedM)**, with ox_lib 
    ```cfg
    ensure oxmysql
    ensure ox_lib
+   ensure ox_target
    ensure rsg-core
    ensure rsg-inventory
    ensure rsg-lawman
@@ -83,8 +89,7 @@ Secure NPC looting and player robbery for **RSG Framework (RedM)**, with ox_lib 
 | `Config.RareChance` | `5` | % chance a body gives rare loot |
 | `Config.CommonCash` | `{ 1, 5 }` | Min / max cash with common loot |
 | `Config.RareCash` | `{ 5, 10 }` | Min / max cash with rare loot |
-| `Config.LootKey` | `0x41AC83D1` | Loot control (INPUT_LOOT) |
-| `Config.LootHoldTime` | `250` | ms the loot key must be held |
+| `Config.LootTime` | `3000` | ms searching the body (progress bar) |
 | `Config.LootDistance` | `3.0` | Max distance to the body (checked on server) |
 | `Config.LootCooldown` | `3` | Seconds between loot rewards per player |
 | `Config.LawAlert` | `true` | Alert lawmen when a body is looted |
@@ -120,8 +125,8 @@ Leave any webhook URL empty (`''`) to disable that channel.
 
 ### Looting NPCs
 1. Kill an NPC.
-2. Walk up to the body and **hold the loot key** (default RDR2 loot prompt).
-3. When the loot animation finishes, the server gives you a random item and some cash.
+2. Target the body with ox_target and choose **Loot Body**.
+3. When the search finishes, the server gives you a random item and some cash.
 
 Each body can only be rewarded once.
 
@@ -189,3 +194,7 @@ rsg-looting/
 ## Credits
 
 - **RexShack / Rexshack-RedM**
+
+## Support
+
+If you enjoy this script, you can support development here: https://buymeacoffee.com/rexshack

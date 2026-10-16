@@ -4,7 +4,7 @@ game 'rdr3'
 lua54 'yes'
 
 description 'rsg-looting'
-version '2.0.1'
+version '3.0.0'
 
 shared_scripts {
   '@ox_lib/init.lua',
@@ -28,6 +28,7 @@ dependencies {
     'rsg-inventory',
     'rsg-lawman',
     'ox_lib',
+    'ox_target',
     'oxmysql',
 }
 

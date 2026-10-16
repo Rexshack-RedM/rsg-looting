@@ -38,5 +38,9 @@
     "wh_reason_not_dead": "pedが死亡していない",
     "wh_reason_too_far_body": "死体から遠すぎる",
     "wh_reason_too_far_target": "対象 %s から遠すぎる",
-    "wh_reason_rob_failed": "%s への強盗が検証に失敗しました"
+    "wh_reason_rob_failed": "%s への強盗が検証に失敗しました",
+    "rob_no_money": "They had no money on them",
+    "wh_reason_rob_skipped": "rob on %s skipped progress bar / no approval",
+    "loot_prompt": "Loot Body",
+    "loot_progress": "Searching body..."
 }

@@ -4,6 +4,11 @@ lib.locale()
 local lootedBodies = {}   -- [netId] = true
 local lootCooldown = {}   -- [src] = os.time()
 local robCooldown  = {}   -- [victimSrc] = os.time()
+local pendingRob   = {}   -- [robberSrc] = { target = id, time = GetGameTimer() }
+
+local ROB_MIN_TIME  = 4500   -- ms: progress bar is 5-7s, so anything faster skipped it
+local ROB_MAX_TIME  = 30000  -- ms: approval from canRob expires after this
+local HANDSUP_TIMEOUT = 3000 -- ms to wait for the victim's client to answer
 
 local function notify(src, title, desc, nType)
     TriggerClientEvent('ox_lib:notify', src, { title = title, description = desc, type = nType or 'inform', duration = 7000 })
@@ -49,6 +54,7 @@ lib.callback.register('rsg-looting:server:lootReward', function(src, netId)
 
     lootCooldown[src] = now
     lootedBodies[netId] = true
+    Entity(body).state:set('rsgLooted', true, true) -- hides the prompt for everyone
 
     local rare = math.random(1, 100) <= Config.RareChance
     local pool = rare and Config.RareItems or Config.CommonItems
@@ -99,13 +105,20 @@ local function canRob(src, targetId)
     local md = Target.PlayerData.metadata
     if md.isdead then return Player, Target, locale('wh_state_dead') end
     if md.ishandcuffed then return Player, Target, locale('wh_state_handcuffed') end
-    -- ask the victim's own client (the robber cannot spoof this)
-    if lib.callback.await('rsg-looting:client:isHandsUp', targetId) then return Player, Target, locale('wh_state_handsup') end
+    -- ask the victim's own client (the robber cannot spoof this); time out so an
+    -- unresponsive victim client can't hang the robber's callback forever
+    local p = promise.new()
+    lib.callback('rsg-looting:client:isHandsUp', targetId, function(up) p:resolve(up == true) end)
+    SetTimeout(HANDSUP_TIMEOUT, function() if p.state == 0 then p:resolve(false) end end)
+    if Citizen.Await(p) then return Player, Target, locale('wh_state_handsup') end
     return false
 end
 
 lib.callback.register('rsg-looting:server:canRob', function(src, targetId)
-    return canRob(src, targetId) and true or false
+    if pendingRob[src] and GetGameTimer() - pendingRob[src].time < 1000 then return false end -- spam guard
+    local ok = canRob(src, targetId)
+    pendingRob[src] = ok and { target = tonumber(targetId), time = GetGameTimer() } or nil
+    return ok and true or false
 end)
 
 local function takeMoney(Player, Target, moneyType, victimKey, robberKey)
@@ -122,17 +135,27 @@ end
 
 RegisterNetEvent('rsg-looting:server:robPlayer', function(targetId)
     local src = source
+    local pending = pendingRob[src]
+    pendingRob[src] = nil
+    targetId = tonumber(targetId)
+    local elapsed = pending and GetGameTimer() - pending.time
+    if not pending or pending.target ~= targetId or elapsed < ROB_MIN_TIME or elapsed > ROB_MAX_TIME then
+        Webhooks.Exploit(src, 'robPlayer', locale('wh_reason_rob_skipped', tostring(targetId)))
+        return
+    end
+
     local Player, Target, reason = canRob(src, targetId)
     if not Player then
         -- client already passed canRob before the progress bar, so a failure here is suspicious
         Webhooks.Exploit(src, 'robPlayer', locale('wh_reason_rob_failed', tostring(targetId)))
         return notify(src, locale('rob_title'), locale('rob_not_valid'), 'error')
     end
-    targetId = tonumber(targetId)
-
     robCooldown[targetId] = os.time()
     local cash = Config.TakeCash and takeMoney(Player, Target, 'cash', 'cash_robbed_victim', 'cash_robbed_robber') or 0
     local blood = Config.TakeBloodMoney and takeMoney(Player, Target, 'bloodmoney', 'bloodmoney_robbed_victim', 'bloodmoney_robbed_robber') or 0
+    if cash == 0 and blood == 0 then
+        notify(src, locale('rob_title'), locale('rob_no_money'), 'inform')
+    end
     addOutlaw(Player, Config.OutlawRob)
     Webhooks.Rob(src, targetId, reason, cash, blood)
 
@@ -140,5 +163,6 @@ RegisterNetEvent('rsg-looting:server:robPlayer', function(targetId)
 end)
 
 AddEventHandler('playerDropped', function()
-    lootCooldown[source] = nil
+    local src = source
+    lootCooldown[src], robCooldown[src], pendingRob[src] = nil, nil, nil
 end)

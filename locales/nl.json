@@ -38,5 +38,9 @@
     "wh_reason_not_dead": "ped is niet dood",
     "wh_reason_too_far_body": "te ver van het lichaam",
     "wh_reason_too_far_target": "te ver van doelwit %s",
-    "wh_reason_rob_failed": "overvalpoging op %s niet gevalideerd"
+    "wh_reason_rob_failed": "overvalpoging op %s niet gevalideerd",
+    "rob_no_money": "They had no money on them",
+    "wh_reason_rob_skipped": "rob on %s skipped progress bar / no approval",
+    "loot_prompt": "Loot Body",
+    "loot_progress": "Searching body..."
 }

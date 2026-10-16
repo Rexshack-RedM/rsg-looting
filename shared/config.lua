@@ -2,14 +2,13 @@ Config = {}
 
 -- items must exist in rsg-core shared items
 Config.CommonItems = { 'bread', 'water' }
-Config.RareItems   = { 'bread', 'water' }
+Config.RareItems   = { 'weapon_revolver_cattleman', 'ammo_box_revolver' }
 
 Config.RareChance  = 5            -- % chance of rare loot
 Config.CommonCash  = { 1, 5 }     -- min / max cash with common loot
 Config.RareCash    = { 5, 10 }    -- min / max cash with rare loot
 
-Config.LootKey      = 0x41AC83D1  -- INPUT_LOOT (1101824977)
-Config.LootHoldTime = 250         -- ms the loot key must be held
+Config.LootTime     = 3000        -- ms searching the body (progress bar)
 Config.LootDistance = 3.0         -- max distance to the body (server checked)
 Config.LootCooldown = 3           -- seconds between loot rewards per player
 Config.LawAlert     = true        -- alert lawmen when a body is looted

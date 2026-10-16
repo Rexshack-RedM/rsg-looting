@@ -38,5 +38,9 @@
     "wh_reason_not_dead": "Ped ist nicht tot",
     "wh_reason_too_far_body": "zu weit von der Leiche entfernt",
     "wh_reason_too_far_target": "zu weit vom Ziel %s entfernt",
-    "wh_reason_rob_failed": "Raubversuch an %s hat die Prüfung nicht bestanden"
+    "wh_reason_rob_failed": "Raubversuch an %s hat die Prüfung nicht bestanden",
+    "rob_no_money": "They had no money on them",
+    "wh_reason_rob_skipped": "rob on %s skipped progress bar / no approval",
+    "loot_prompt": "Loot Body",
+    "loot_progress": "Searching body..."
 }

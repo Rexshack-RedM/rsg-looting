@@ -38,5 +38,9 @@
     "wh_reason_not_dead": "ped nie jest martwy",
     "wh_reason_too_far_body": "za daleko od ciała",
     "wh_reason_too_far_target": "za daleko od celu %s",
-    "wh_reason_rob_failed": "próba rabunku na %s nie przeszła weryfikacji"
+    "wh_reason_rob_failed": "próba rabunku na %s nie przeszła weryfikacji",
+    "rob_no_money": "They had no money on them",
+    "wh_reason_rob_skipped": "rob on %s skipped progress bar / no approval",
+    "loot_prompt": "Loot Body",
+    "loot_progress": "Searching body..."
 }

@@ -38,5 +38,9 @@
     "wh_reason_not_dead": "το ped δεν είναι νεκρό",
     "wh_reason_too_far_body": "πολύ μακριά από το πτώμα",
     "wh_reason_too_far_target": "πολύ μακριά από τον στόχο %s",
-    "wh_reason_rob_failed": "η απόπειρα ληστείας στον %s απέτυχε τον έλεγχο"
+    "wh_reason_rob_failed": "η απόπειρα ληστείας στον %s απέτυχε τον έλεγχο",
+    "rob_no_money": "They had no money on them",
+    "wh_reason_rob_skipped": "rob on %s skipped progress bar / no approval",
+    "loot_prompt": "Loot Body",
+    "loot_progress": "Searching body..."
 }
