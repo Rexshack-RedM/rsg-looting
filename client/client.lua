@@ -11,7 +11,9 @@ local HANDSUP_ANIM = 'hands_up_loop'
 local looting = false
 
 local function canLoot(entity)
-    return not looting and not IsPedAPlayer(entity) and IsEntityDead(entity)
+    return not looting and not IsPedAPlayer(entity)
+        and Citizen.InvokeNative(0xB980061DA992779D, entity) -- IS_PED_HUMAN: no animals
+        and IsEntityDead(entity)
         and NetworkGetEntityIsNetworked(entity) and not Entity(entity).state.rsgLooted
         and not IsEntityDead(cache.ped) and not IsPedInAnyVehicle(cache.ped, true)
 end
