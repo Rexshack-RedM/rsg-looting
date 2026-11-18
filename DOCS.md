@@ -34,5 +34,11 @@ Loaded through `@rsg-core/shared/locale.lua` from `locales/*.json`. Language is 
 `exports['rsg-looting']:SendWebhook(channel, embed)` — channel `loot`, `rob` or `exploit`.
 
 ## Changelog
+- **3.1.0** — Optional rsg-reputation integration (`Config.Reputation`): `robbery` action when a player is robbed.
 - **3.0.4** — Switched from ox_target to rsg-target (`exports['rsg-target']:addGlobalPed/removeGlobalPed`).
 - **3.0.3** — Removed ox_lib: `@rsg-core/shared/locale.lua`, `RSGCore.Functions.Notify` / `RSGCore:Client:Notify`, `CreateCallback`/`AwaitCallback`, `CreateClientCallback`/`AwaitClientCallback`, `RSGCore.Functions.ProgressBar`, `GetClosestPed`/`GetClosestPlayer`; `cache.ped` → `PlayerPedId()`; locale convar now `rsg:locale`.
+
+## rsg-reputation integration
+
+`Config.Reputation = { Enabled, Action }`. In `rsg-looting:server:robPlayer`, after the checks pass and the money is taken (next to the outlaw status), the server calls `ApplyAction(src, 'robbery')`. No region is passed, so only honor changes. Looting dead bodies is not affected. Skipped when rsg-reputation is not started.
+
